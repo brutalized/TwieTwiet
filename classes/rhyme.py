@@ -57,6 +57,8 @@ class Rhyme:
 
 
 def test_rhyme():
+	import os
+	os.chdir(os.path.dirname('../'))
 	print('Initializing rhyme dictionary...')
 	rhyme = Rhyme()
 	print('Initialization complete.\n')

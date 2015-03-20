@@ -9,7 +9,7 @@ from classes.rhyme import Entry, Rhyme
 def main():
     db = Tweets() # init db
     tweets = db.getTweets() # get all tweets
-    rhyme = Rhyme('')
+    rhyme = Rhyme()
 
 
     usedTweet = tweets[0].message.split()
