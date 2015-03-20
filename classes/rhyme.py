@@ -18,7 +18,7 @@ class Entry:
 		self.cvpattern = self.pattern.findall(cvpattern)
 
 class Rhyme:
-	def __init__(self, filename='../celex/dpw.cd'):
+	def __init__(self, filename='./celex/dpw.cd'):
 		self.filename = filename
 		self.dictionary = {}
 		
