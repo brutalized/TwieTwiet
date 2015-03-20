@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import json
 import re
 
@@ -39,19 +41,16 @@ class Rhyme:
 			word1 = self.dictionary[word1]
 			word2 = self.dictionary[word2]
 			
-			phonemes1 = word1.phonology[word1.stress:]
-			cv1 = word1.cvpattern[word1.stress:]
-			consonants = cv1[0].count('C', 0, cv1[0].index('V')) # count consonants at the start of the first syllable until you find a V
-			phonemes1[0] = phonemes1[0][consonants:]
-			
-			phonemes2 = word2.phonology[word2.stress:]
-			cv2 = word2.cvpattern[word2.stress:]
-			consonants = cv2[0].count('C', 0, cv2[0].index('V')) # count consonants at the start of the first syllable until you find a V
-			phonemes2[0] = phonemes2[0][consonants:]
-			
-			return phonemes1 == phonemes2
+			return self.getRhyme(word1) == self.getRhyme(word2)
 		else:
 			raise ValueError('word1 or word2 was not found in the dictionary.')
+	
+	def getRhyme(self, word):
+		phonemes = word.phonology[word.stress:]
+		cv = word.cvpattern[word.stress:]
+		consonants = cv[0].count('C', 0, cv[0].index('V')) # count consonants at the start of the first syllable until you find a V
+		phonemes[0] = phonemes[0][consonants:]
+		return phonemes
 	
 	def lookup(self, word):
 		return word in self.dictionary
@@ -74,7 +73,9 @@ def test_rhyme():
 			print('{} en {} rijmen niet!\n'.format(word1, word2))
 
 def test_full():
+	import os
 	import tweets
+	os.chdir(os.path.dirname('../'))
 	samplesize = 1000
 	print('Initializing tweets...')
 	tweets_handler = tweets.Tweets()
