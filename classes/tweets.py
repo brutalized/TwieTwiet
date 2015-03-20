@@ -5,18 +5,20 @@ import json
 from collections import namedtuple
 from operator import attrgetter
 
+# Todo:
+# Refactor
+
 class Tweets():
     ''' Class to read out a specified number of tweets '''
 
     def __init__(self):
         self.twitterData = self.getTwitterData()
 
-
     def getTwitterData(self):
         ''' Gets Twitter JSON data for a specific period '''
         # todo read latest data directly from ssh or other means
         
-        data = open('./sampledata/20150311_12.out')
+        data = open('./sampledata/20150311_12.out',mode='r',encoding='utf-8')
         twitterData = []
         for line in data:
             try:
@@ -34,26 +36,35 @@ class Tweets():
         if(stop == False):
             stop = len(self.twitterData)
 
-        tweets = []
+        self.tweets = []
         if(showRawData): 
             for n in range(start, stop):
-                tweets.append(self.twitterData[n])
+                self.tweets.append(self.twitterData[n])
         else:
-            tweet = namedtuple('tweet', 'date, message, userName, userImage, userPopularity')
+            # https://dev.twitter.com/overview/api/tweets
+            Tweet = namedtuple('Tweet', 'date, message, userName, userImage, userPopularity')
             for n in range(start, stop):
-                tweets.append(tweet(self.twitterData[n]['created_at'],
+                #if(self.doFilter(self.twitterData[n])):
+                #    continue
+                
+                self.tweets.append(Tweet(self.twitterData[n]['created_at'],
                                     self.twitterData[n]['text'],
                                     self.twitterData[n]['user']['name'],
                                     self.twitterData[n]['user']['profile_image_url'],
                                     int(self.twitterData[n]['user']['followers_count'])))         
-            tweets = self.doRank(tweets)
+            self.tweets = self.doRank(self.tweets)
             
-        return tweets
+        return self.tweets
 
     def doRank(self, tweets):
         ''' Do some filtering and ranking '''
         # need to add more filtering
         return sorted(tweets, key=attrgetter('userPopularity'), reverse=True)
+
+    def doFilter(self, tweet):
+        ''' Checks if the tweet must be filtered from results. Returns True if it does '''
+        pass # moved to seperate class
+
 
 def tester():
     import os
@@ -65,14 +76,14 @@ def tester():
     for tweet in tester.getTweets(0,1,True):
         print(json.dumps(tweet, sort_keys=True, indent=4, separators=(',', ': ')))
     print('\n\nPrinting first default and ranked tweet:\n')
+    print(len(tester.getTweets(showRawData=True)))
+    print(len(tester.getTweets()))
     tweets = tester.getTweets()
-    print(tweets[0])
+    try:
+        print(tweets[0])
+    except:
+        print('Error: No tweets found!')
     print('\n\nEnd of tester')
 
 if __name__ == "__main__":
     tester()
-
-
-
-    
-    
