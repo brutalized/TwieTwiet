@@ -24,21 +24,34 @@
   </property>
   <property name="styleSheet">
    <string notr="true">background-image: url(:/images/bg.jpg);
+background-repeat: none;
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="maximumSize">
+    <size>
+     <width>1366</width>
+     <height>768</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-repeat: none;</string>
+   </property>
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>-3</x>
-      <y>2</y>
-      <width>2002</width>
-      <height>851</height>
+      <x>0</x>
+      <y>1</y>
+      <width>1361</width>
+      <height>731</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMaximumSize</enum>
+     </property>
      <property name="rightMargin">
-      <number>800</number>
+      <number>0</number>
      </property>
      <item row="0" column="0">
       <spacer name="verticalSpacer_3">
@@ -51,23 +64,20 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>1</height>
+         <height>25</height>
         </size>
        </property>
       </spacer>
      </item>
-     <item row="5" column="0">
-      <spacer name="verticalSpacer_2">
+     <item row="4" column="0">
+      <spacer name="verticalSpacer_4">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>230</height>
+         <height>0</height>
         </size>
        </property>
       </spacer>
@@ -114,22 +124,6 @@
         <number>15</number>
        </property>
       </widget>
-     </item>
-     <item row="2" column="0">
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>50</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item row="3" column="0" alignment="Qt::AlignHCenter">
       <widget class="QTableWidget" name="tableWidget">
@@ -225,12 +219,12 @@
        <column/>
       </widget>
      </item>
-     <item row="4" column="0" alignment="Qt::AlignHCenter">
+     <item row="5" column="0" alignment="Qt::AlignHCenter">
       <widget class="QPushButton" name="pushButton">
        <property name="minimumSize">
         <size>
          <width>80</width>
-         <height>0</height>
+         <height>40</height>
         </size>
        </property>
        <property name="maximumSize">
@@ -246,6 +240,38 @@
         <string>Generate</string>
        </property>
       </widget>
+     </item>
+     <item row="2" column="0">
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>160</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="6" column="0">
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>155</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </widget>
