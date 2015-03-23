@@ -18,17 +18,21 @@ class ClickableLabel(QtGui.QLabel):
 
 
 class Gui(QtGui.QMainWindow, form_class):
-
-	def __init__(self, parent=None):
+	"""  """
+	
+	def __init__(self, twieTwiets, parent=None):
 		""" initializing widgets """
 		QtGui.QMainWindow.__init__(self, parent)
 		self.setupUi(self)
-		self.showMaximized()
+		self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.MSWindowsFixedSizeDialogHint)
+
+		self.twieTwiets = twieTwiets
+		self.currentIndex = -1
 
 		self.header = self.tableWidget.horizontalHeader()
 		self.header.setResizeMode(QtGui.QHeaderView.Stretch)
 		self.header.setBackgroundRole(QtGui.QPalette.NoRole)
-		
+
 		#user image
 		self.url = "http://eaassets-a.akamaihd.net/battlelog/prod/emblem/219/323/256/2955058837069862971.png"
 		pixmap = self.getUserImage(self.url)
@@ -69,6 +73,8 @@ class Gui(QtGui.QMainWindow, form_class):
 		self.pushButton.clicked.connect(self.updateUI)
 		self.clickable = True
 
+		self.updateUI()
+
 	def showDetails(self):
 		""" show extra tweet information """
 		if self.clickable == True:
@@ -106,11 +112,14 @@ class Gui(QtGui.QMainWindow, form_class):
 		pixmap.loadFromData(data)
 		return pixmap
 
-	def updateUI(self, tweet, tweet2):
-		""" Update tweet data """ 
-		pixmap = getUserImage(tweet.userImage)
+	def updateUI(self):
+		""" Update tweet data """
+		self.currentIndex = (self.currentIndex + 1) % len(self.twieTwiets)
+		tweet, tweet2 = self.twieTwiets[self.currentIndex]
+		
+		pixmap = self.getUserImage(tweet.userImage)
 		self.profile_picture.setBackground(QtGui.QBrush(pixmap))
-		pixmap2 = getUserImage(tweet2.userImage)
+		pixmap2 = self.getUserImage(tweet2.userImage)
 		self.profile_picture2.setBackground(QtGui.QBrush(pixmap2))
 
 		self.name.setText(tweet.userName)
