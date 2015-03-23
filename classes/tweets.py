@@ -4,58 +4,70 @@ import sys
 import json
 import gzip
 import datetime
+import re
 from collections import namedtuple
 from operator import attrgetter
+from classes.filter import Filter
 
-class Tweets():
-	''' Class to read out a specified number of tweets '''
+class Tweets:
+	''' Class to initialize the Tweets set to use for Rhyme making '''
 
-	def __init__(self):
-		self.twitterData = self.getTwitterData()
+	def __init__(self, start = 0, stop = False):
+		self.twitterData = self.__getTwitterData(start, stop)
 
-	def getTwitterData(self):
-		''' Gets Twitter JSON data for the past hour '''
+	def __getTwitterData(self, start, stop):
+		''' Gets all the Twitter data from two hours ago (or is not available use fallback data) and make it a JSON set '''
 
 		try:
 			dt = datetime.datetime.now()
 			filename = '/net/corpora/twitter2/{0}/{1:02d}/{0}{1:02d}{2:02d}_{3:02d}.out.gz'.format(dt.year, dt.month, dt.day, dt.hour-2)
 			# print(filename)
-			data = open(filename, mode='r', encoding='utf-8')
+			data = gzip.open(filename)
 		except:
-			# Windows/outside RuG fallback
-			print('Using fallback demodata, you are outside LWP')
+			# print('Using fallback demodata, you are outside LWP')
 			data = gzip.open('./demodata/20150311_12.out.gz')
 		
 		twitterData = []
+		lineNumber = 0
 		for line in data:
+			if stop != False:
+				if(lineNumber == stop):
+					break
+				lineNumber += 1
+			
 			try:
 				twitterData.append(json.loads(line.decode('utf-8')))
 			except ValueError as errorMessage:
-				print('Tweet parse error: "' + str(errorMessage) + '"', file=sys.stderr)
+				# print('Tweet parse error: "' + str(errorMessage) + '"', file=sys.stderr)
 				continue
 
 		return twitterData
 
 
-	def getTweets(self, start = 0, stop = False):
-		''' Get a number of tweets from the database '''
+	def getTweets(self):
+		''' Returns a list containing tweets as namedtuples '''
 
-		if(stop == False):
-			stop = len(self.twitterData)
-
-		# Field specification from Twitter JSON:
-		# https://dev.twitter.com/overview/api/tweets
-		Tweet = namedtuple('Tweet', 'date, message, userName, userImage, userPopularity')
+		# Twitter JSON legend from https://dev.twitter.com/overview/api/tweets	
+		Tweet = namedtuple('Tweet', 'date, message, userName, userImage, userPopularity, rhymeWord')
 		self.tweets = []
-		for n in range(start, stop):
+		filter = Filter()
+		for n in range(len(self.twitterData)):
+			wordList = self.twitterData[n]['text'].split()
+			if filter.filterTweetMessage(wordList):
+				continue
+			
+			rhymeWord = re.sub(r'\W+', '', wordList[len(wordList)-1])
+			if filter.filterRhymeWord(rhymeWord):
+				continue
+			
 			self.tweets.append(Tweet(self.twitterData[n]['created_at'],
 								self.twitterData[n]['text'],
 								self.twitterData[n]['user']['name'],
 								self.twitterData[n]['user']['profile_image_url'],
-								int(self.twitterData[n]['user']['followers_count'])))
+								int(self.twitterData[n]['user']['followers_count']),
+								rhymeWord))
 
 		return sorted(self.tweets, key=attrgetter('userPopularity'), reverse=True)
-	
 	
 def tester():
 	import os
@@ -64,8 +76,9 @@ def tester():
 	tester = Tweets()
 	print('Database init finished.')
 	print('\nPrinting tweet:\n')
-	for tweet in tester.getTweets(0,1):
+	for tweet in tester.getTweets():
 		print(tweet)
+		break;
 	print('\n\nEnd of tester')
 
 if __name__ == "__main__":

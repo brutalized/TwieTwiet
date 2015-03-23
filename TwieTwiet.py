@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-''' TwieTwie Application by Arend-Eric, Lesley and Micha '''
-
+''' TwieTwiet Application by Arend-Eric, Lesley and Micha '''
+import time
 import re
 import sys
 from PyQt4 import QtGui
@@ -10,31 +10,34 @@ from classes.rhyme import Entry, Rhyme
 from classes.gui import Gui
 
 def main():
-	db = Tweets() # init db
-	tweets = db.getTweets() # get all tweets
-	rhyme = Rhyme()
-	
-	twietwiets = []
-	usedTweet = tweets[0].message.split()
-	wantedRhymeWord = re.sub(r'\W+', '', usedTweet[len(usedTweet)-1])
+	db = Tweets(0,10000) # init db
+	tweets = db.getTweets() # get tweets
+	rhyme = Rhyme()	
+	usedTweets = set()
+	twieTweets = {}
 	
 	for tweet in tweets:
-		parts = tweet.message.split()
-		lw = re.sub(r'\W+', '', parts[len(parts)-1])
-		
-		try:
-			if rhyme.compare(wantedRhymeWord, lw):
-				twietwiets.append((tweets[0], tweet))
-		except:
-			continue
-	
-	print('Enjoy the GUI!')
+		for rhymingTweet in tweets:
+			try:
+				if rhyme.compare(tweet.rhymeWord, rhymingTweet.rhymeWord) and tweet.rhymeWord != rhymingTweet.rhymeWord:
+					if (tweet.message not in usedTweets) and (rhymingTweet.message not in usedTweets):
+						twieTweets[tweet] = rhymingTweet
+						usedTweets.add(tweet.message)
+						usedTweets.add(rhymingTweet.message)
+					break
+			except:
+				continue
 	
 	app = QtGui.QApplication(sys.argv)
 	gui = Gui(None)
-	gui.updateUI(twietwiets[0][0], twietwiets[0][1])
 	gui.show()
 	app.exec_()
+	
+	for tweet1, tweet2 in twieTweets.items():
+		gui.updateUI(tweet1, tweet2)
+		print(tweet1.message.encode('utf-8'))
+		print(tweet2.message.encode('utf-8'))
+		print('-----------')
 
 if __name__ == "__main__":
 	main()
