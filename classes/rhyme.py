@@ -19,17 +19,19 @@ class Entry:
 
 class Rhyme:
 	def __init__(self, filename='./celex/dpw.cd'):
-		self.filename = filename
+		file = open(filename, encoding='utf-8')
 		self.dictionary = {}
 		
 		# load dictionary
-		with open(filename, encoding='utf-8') as f:
-			for line in f:
-				line = line.rstrip().split('\\')
-				if line[3] != '':
-					entry = Entry(line[1], line[3], line[4], line[5])
+		#entries = [line.rstrip().split('\\') for line in file]
+		#self.dictionary = {entry[1].lower(): Entry(entry[1], entry[3], entry[4], entry[5]) for entry in entries if entry[3] != ''}
+
+		for line in file:
+			line = line.rstrip().split('\\')
+			if line[3] != '':
+				entry = Entry(line[1], line[3], line[4], line[5])
 				self.dictionary[entry.orthography.lower()] = entry
-	
+		
 	def compare(self, word1, word2):
 		"""
 		Checks if two words rhyme with each other.
