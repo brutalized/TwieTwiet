@@ -1,21 +1,21 @@
 #!/usr/bin/python3
 
 ''' TwieTwiet Application by Arend-Eric, Lesley and Micha '''
-import time
-import re
 import sys
 from PyQt4 import QtGui
 from classes.tweets import Tweets
 from classes.rhyme import Entry, Rhyme
 from classes.gui import Gui
+from classes.rank import Rank
 
 def main():
-	db = Tweets(0,25000) # init db, use max 25.000 tweets
+	db = Tweets() # init db
 	tweets = db.getTweets() # get tweets
-	rhyme = Rhyme()	
+	rhyme = Rhyme()	# init rhyme db
 	usedTweets = set()
 	twieTwiets = []
 	
+	# Find TwieTweets
 	for tweet in tweets:
 		for rhymingTweet in tweets:
 			try:
@@ -28,8 +28,11 @@ def main():
 			except:
 				continue
 	
+	rank = Rank(twieTwiets) # Rank them
+	
+	# Show the GUI
 	app = QtGui.QApplication(sys.argv)
-	gui = Gui(twieTwiets)
+	gui = Gui([(tweet1, tweet2) for tweet1, tweet2, score in rank.getRankedTweets()])
 	gui.show()
 	app.exec_()
 

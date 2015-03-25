@@ -56,10 +56,13 @@ class Tweets:
 		''' Returns a list containing tweets as namedtuples '''
 
 		# Twitter JSON legend from https://dev.twitter.com/overview/api/tweets	
-		Tweet = namedtuple('Tweet', 'date, message, userName, userImage, userPopularity, rhymeWord')
+		Tweet = namedtuple('Tweet', 'date, message, userName, userImage, userPopularity, userInvolvement, rhymeWord')
 		self.tweets = []
 		filter = Filter()
 		for n in range(len(self.twitterData)):
+			if self.twitterData[n]['truncated'] == True:
+				continue
+		
 			wordList = self.twitterData[n]['text'].split()
 			if filter.filterTweetMessage(wordList):
 				continue
@@ -68,17 +71,17 @@ class Tweets:
 			if filter.filterRhymeWord(rhymeWord):
 				continue
 				
-	
 			# Wed Mar 25 09:00:02 +0000 2015
-			t = time.strftime('%d-%m-%Y\n%H:%M:%S', time.strptime(self.twitterData[n]['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
-			self.tweets.append(Tweet(t,
+			tweetTime = time.strftime('%d-%m-%Y\n%H:%M:%S', time.strptime(self.twitterData[n]['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
+			self.tweets.append(Tweet(tweetTime,
 								self.twitterData[n]['text'],
 								self.twitterData[n]['user']['name'],
 								self.twitterData[n]['user']['profile_image_url'],
 								int(self.twitterData[n]['user']['followers_count']),
+								int(self.twitterData[n]['user']['statuses_count']),
 								rhymeWord))
 
-		return sorted(self.tweets, key=attrgetter('userPopularity'), reverse=True)
+		return self.tweets
 	
 def tester():
 	import os

@@ -128,6 +128,11 @@ class Gui(QtGui.QMainWindow, form_class):
 
 	def updateUI(self):
 		""" Update tweet data """
+		if(len(self.twieTwiets) == 0):
+			self.tweet.setText(self.styleTweet("Sorry!"))
+			self.tweet2.setText(self.styleTweet("No TwieTweets found"))
+			return
+			
 		self.currentIndex = (self.currentIndex + 1) % len(self.twieTwiets)
 		tweet, tweet2 = self.twieTwiets[self.currentIndex]
 
