@@ -24,11 +24,13 @@ class Tweets:
 		filename = '/net/corpora/twitter2/Tweets/{0}/{1:02d}/{0}{1:02d}{2:02d}:{3:02d}.out.gz'.format(dt.year, dt.month, dt.day, dt.hour-2)
 		
 		if not os.path.isfile(filename):
-			# Use fallback demodata, user is outside LWP')
+			# Use fallback demodata, user is outside LWP'
 			filename = 'demodata.gz'
 		
 		if not os.path.isfile(filename):
-			print('Error:\nCould not find any Twitter data. Please put demodata.out.gz in the root map, or use the program on the LWP', file=sys.stderr)
+			print('Could not find Twitter data. Please put a g-zipped file named "demodata.gz" containing Twitter\'s ', file=sys.stderr, end='')
+			print('JSON-data in the root map or use the program on the Linux Workplace of the University of Groningen.\n', file=sys.stderr)
+			input('Press <ENTER> to exit')
 			exit(-1)			
 
 		data = gzip.open(filename)
