@@ -10,7 +10,7 @@ from classes.rhyme import Entry, Rhyme
 from classes.gui import Gui
 
 def main():
-	db = Tweets(0,10000) # init db
+	db = Tweets(0,25000) # init db, use max 25.000 tweets
 	tweets = db.getTweets() # get tweets
 	rhyme = Rhyme()	
 	usedTweets = set()
