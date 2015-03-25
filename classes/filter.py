@@ -2,16 +2,16 @@ class Filter():
 	''' Class with various filtering methods for tweets and rhymewords'''
 		
 	def filterTweetMessage(self, wordList):
-		''' Umberella method to filter the Tweet message text '''
+		''' Umbrella method to filter the Tweet message text '''
 			
-		if self.filterRetweets(wordList) or self.filterShortMessages(wordList) or self.filterLongMessages(wordList) or self.filterHashTag(wordList):
+		if self.filterRetweets(wordList) or self.filterShortMessages(wordList) or self.filterLongMessages(wordList):
 			return True
 		
 		return False
 		
 	def filterRhymeWord(self, rhymeWord):
 		''' Umbrella method to filter the Rhymeword '''
-		if self.filterHTTP(rhymeWord) or self.filterShortWord(rhymeWord):
+		if self.filterHTTP(rhymeWord) or self.filterShortWord(rhymeWord) or self.filterHashTag(rhymeWord) or self.filterAtSign(rhymeWord):
 			return True
 			
 		return False
@@ -34,9 +34,14 @@ class Filter():
 		if len(wordList) > 12:
 			return True
 			
-	def filterHashTag(self, wordList):
-		''' Check if the tweet's last word is an hashtag '''
-		if wordList[-1].find('#') != -1:
+	def filterAtSign(self, rhymeWord):
+		''' Check if the tweet's last word is an at sign '''
+		if rhymeWord.find('@') != -1:
+			return True
+			
+	def filterHashTag(self, rhymeWord):
+		''' Check if the tweet's last word is a hashtag '''
+		if rhymeWord.find('#') != -1:
 			return True
 			
 	def filterHTTP(self, rhymeWord):
