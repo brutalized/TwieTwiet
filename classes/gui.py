@@ -23,6 +23,7 @@ class Gui(QtGui.QMainWindow, form_class):
 	def __init__(self, twieTwiets, parent=None):
 		""" initializing widgets """
 		QtGui.QMainWindow.__init__(self, parent)
+		self.setStyle(QtGui.QStyleFactory.create('Cleanlooks')) # widget bugfix 
 		self.setupUi(self)
 		self.setWindowFlags(QtCore.Qt.Window | QtCore.Qt.MSWindowsFixedSizeDialogHint)
 

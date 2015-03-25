@@ -29,9 +29,9 @@ class Filter():
 			return True
 			
 	def filterLongMessages(self, wordList):
-		''' Check if the tweet contains maximal 11 words '''
+		''' Check if the tweet contains maximal 12 words '''
 		
-		if len(wordList) > 11:
+		if len(wordList) > 12:
 			return True
 			
 	def filterHashTag(self, wordList):
@@ -46,6 +46,6 @@ class Filter():
 			return True
 			
 	def filterShortWord(self, rhymeWord):
-		''' Check if the last word is very short (< 4 char) ''' 
-		if len(rhymeWord) < 4:
+		''' Check if the last word is very short (< 3 char) ''' 
+		if len(rhymeWord) < 3:
 			return True
