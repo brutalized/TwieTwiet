@@ -2,6 +2,8 @@
 
 import json
 import re
+import os.path
+import sys
 
 class Entry:
 	"""
@@ -18,15 +20,25 @@ class Entry:
 		self.cvpattern = self.pattern.findall(cvpattern)
 
 class Rhyme:
-	def __init__(self, filename='./celex/dpw.cd'):
-		file = open(filename, encoding='utf-8')
+	def __init__(self):
+		
+		filename = '/net/corpora/CELEX/dutch/dpw/dpw.cd'
+		
+		if not os.path.isfile(filename):
+			# Try using local fallback celex data, user is outside LWP')
+			filename = 'dpw.cd'
+		
+		if not os.path.isfile(filename):
+			print('Error:\nCould not find Celex DPW. Please put dpw.cd in the root map, or use the program on the LWP', file=sys.stderr)
+			exit(-1)
+		
 		self.dictionary = {}
 		
 		# load dictionary
 		#entries = [line.rstrip().split('\\') for line in file]
 		#self.dictionary = {entry[1].lower(): Entry(entry[1], entry[3], entry[4], entry[5]) for entry in entries if entry[3] != ''}
 
-		for line in file:
+		for line in open(filename, encoding='utf-8'):
 			line = line.rstrip().split('\\')
 			if line[3] != '':
 				entry = Entry(line[1], line[3], line[4], line[5])
