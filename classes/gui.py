@@ -120,7 +120,7 @@ class Gui(QtGui.QMainWindow, form_class):
 			self.tableWidget.hideColumn(3)
 			self.toggle = True
 
-	def getUserImage(self, url): 
+	def getUserImage(self, url):
 		data = urllib.request.urlopen(url).read()
 		pixmap = QtGui.QPixmap()
 		pixmap.loadFromData(data)
@@ -156,8 +156,17 @@ class Gui(QtGui.QMainWindow, form_class):
 				words[i] = '<span style="color:#89dee3; text-decoration: underline;">{}</span>'.format(words[i])
 		styledString = " ".join(words)
 
-
 		return styledString
+
+
+class ProgressBar(QtGui.QProgressBar):
+	def __init__(self):
+		super().__init__()
+		self.resize(300, 50)
+
+	def update(self, title, value):
+		self.setWindowTitle(title)
+		self.setValue(value)
 
 
 if __name__ == "__main__":

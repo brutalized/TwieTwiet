@@ -7,15 +7,26 @@ import sys
 from PyQt4 import QtGui
 from classes.tweets import Tweets
 from classes.rhyme import Entry, Rhyme
-from classes.gui import Gui
+from classes.gui import Gui, ProgressBar
 
 def main():
-	db = Tweets(0,25000) # init db, use max 25.000 tweets
+	app = QtGui.QApplication(sys.argv)
+	progress = ProgressBar()
+	progress.show() # gotcho reference bro!
+
+	progress.update('Initializing database...', 5)
+	db = Tweets(0, 25000) # init db, use max 25.000 tweets
+
+	progress.update('Loading Twitter data...', 30)
 	tweets = db.getTweets() # get tweets
-	rhyme = Rhyme()	
+
+	progress.update('Loading rhyme dictionary...', 40)
+	rhyme = Rhyme()
+
+	progress.update('Matching tweets...', 70)
 	usedTweets = set()
 	twieTwiets = []
-	
+
 	for tweet in tweets:
 		for rhymingTweet in tweets:
 			try:
@@ -27,8 +38,8 @@ def main():
 					break
 			except:
 				continue
-	
-	app = QtGui.QApplication(sys.argv)
+
+	progress.close()
 	gui = Gui(twieTwiets)
 	gui.show()
 	app.exec_()
