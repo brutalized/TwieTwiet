@@ -54,7 +54,7 @@ class Tweets:
 		''' Returns a list containing tweets as namedtuples '''
 
 		# Twitter JSON legend from https://dev.twitter.com/overview/api/tweets	
-		Tweet = namedtuple('Tweet', 'date, message, userName, userImage, userPopularity, rhymeWord')
+		Tweet = namedtuple('Tweet', 'date, message, userName, userScreenName, userImage, userPopularity, rhymeWord')
 		self.tweets = []
 		filter = Filter()
 		for n in range(len(self.twitterData)):
@@ -72,6 +72,7 @@ class Tweets:
 			self.tweets.append(Tweet(t,
 								self.twitterData[n]['text'],
 								self.twitterData[n]['user']['name'],
+								self.twitterData[n]['user']['screen_name'],
 								self.twitterData[n]['user']['profile_image_url'],
 								int(self.twitterData[n]['user']['followers_count']),
 								rhymeWord))
