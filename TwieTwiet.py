@@ -109,7 +109,7 @@ def main(argv):
 				twitter = api.Twitter(auth=auth)
 
 				for tweet, tweet2 in twieTwiets:
-					status = '@' + tweet.userScreenName + ' ' + tweet.message + "\n" + '@' + tweet2.userScreenName + ' ' + tweet2.message
+					status = 'RT @' + tweet.userScreenName + ' ' + tweet.message + "\n" + 'RT @' + tweet2.userScreenName + ' ' + tweet2.message
 					if len(status) <= 140:
 						response = twitter.statuses.update(status=status)
 						if response.headers.get('status') == "200 OK":
