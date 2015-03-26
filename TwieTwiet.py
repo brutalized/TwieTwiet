@@ -5,6 +5,7 @@ import sys
 import twitter.api as api
 import twitter.oauth as oauth
 import datetime
+import time
 from PyQt4 import QtGui
 from classes.tweets import Tweets
 from classes.rhyme import Entry, Rhyme
@@ -53,10 +54,23 @@ def main(argv):
 		gui.show()
 		app.exec_()
 	elif len(argv) == 2 and argv[1] == '-tweet':
-		lastUpdate = None
+		token = input('Enter Twitter Access Token: ')
+		token_key = input('Enter Twitter Access Token Secret: ')
+		con_secret = input('Enter Twitter Consumer Key (API Key): ')
+		con_secret_key = input('Enter Twitter Consumer Secret (API Secret): ')
+
+		if input('Post an update right now? Type y for yes, any other key for no: ') == 'y':
+			postFirstTime = True
+		else:
+			postFirstTime = False
+			print('\nTwitter posting started, will post an update to Twitter every hour from now.')
+		
+		lastUpdate = datetime.datetime.now()
 		while True:
 			dt = datetime.datetime.now()
-			if dt.hour != lastUpdate.hour:
+			if dt.hour != lastUpdate.hour or postFirstTime:
+				postFirstTime = False
+				
 				lastUpdate = datetime.datetime.now()
 				print('Initializing database... (this may take a while)')
 				db = Tweets()
@@ -89,13 +103,8 @@ def main(argv):
 
 				rank = Rank(twieTwiets) # Rank them
 				twieTwiets = [(tweet1, tweet2) for tweet1, tweet2, score in rank.getRankedTweets()]
-
+				
 				# Post the first TwieTwiet to twitter that doesn't exceed the character limit
-				token = 'xxx'
-				token_key = 'xxx'
-				con_secret = 'xxx'
-				con_secret_key = 'xxx'
-
 				auth = oauth.OAuth(token, token_key, con_secret, con_secret_key)
 				twitter = api.Twitter(auth=auth)
 
@@ -103,12 +112,13 @@ def main(argv):
 					status = '@' + tweet.userScreenName + ' ' + tweet.message + "\n" + '@' + tweet2.userScreenName + ' ' + tweet2.message
 					if len(status) <= 140:
 						response = twitter.statuses.update(status=status)
-						if response.headers.get('status') == 200:
+						if response.headers.get('status') == "200 OK":
 							print('TwieTwiet posted.')
 						else:
 							print('Status wasn\'t OK: {}'.format(response.headers.get('status')), file=sys.stderr)
-							exit(-1)
 						break
+					else:
+						continue
 				else:
 					print('WARNING: Could not find a good TwieTwiet')
 			else:
