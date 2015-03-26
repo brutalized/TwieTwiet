@@ -7,7 +7,7 @@ import sys
 
 class Entry:
 	"""
-	This class represents an entry for a real life dictionary.
+	This class represents an entry for a real life dictionary, containing all the information needed to check if an entry rhymes with a different one.
 	"""
 	pattern = re.compile('[^\[\]]+')
 	def __init__(self, orthography, stress, phonology, cvpattern):
@@ -25,7 +25,7 @@ class Rhyme:
 	This class loads a dictionary from a file, converts it, and offers an interface to determine whether or not two words rhyme with each other by combining the stress, pronunciation and CV pattern from the loaded dictionary.
 	"""
 	def __init__(self):
-		""" Load dictionary from file and initialize the rhyme dictionary """
+		""" Load dictionary from file and initialize the rhyme dictionary. """
 		filename = '/net/corpora/CELEX/dutch/dpw/dpw.cd'
 		
 		if not os.path.isfile(filename):
@@ -57,7 +57,7 @@ class Rhyme:
 			raise ValueError('word1 or word2 was not found in the dictionary.')
 	
 	def getRhyme(self, word):
-		""" Returns the part of the word that has to rhyme (as a list) """
+		""" Returns the part of the word that has to rhyme (as a list). """
 		phonemes = word.phonology[word.stress:]
 		cv = word.cvpattern[word.stress:]
 		consonants = cv[0].count('C', 0, cv[0].index('V')) # count consonants at the start of the first syllable until you find a V
@@ -65,11 +65,12 @@ class Rhyme:
 		return phonemes
 	
 	def lookup(self, word):
-		""" Checks whether or not the word was found in the rhyme dictionary """
+		""" Checks whether or not the word was found in the rhyme dictionary. """
 		return word in self.dictionary
 
 
 def testRhyme():
+	""" Test function for testing this module individually. """
 	import os
 	os.chdir(os.path.dirname('../'))
 	print('Initializing rhyme dictionary...')
@@ -89,6 +90,8 @@ def testRhyme():
 
 if __name__ == '__main__':
 	testRhyme()
+
+# Some (rhyming) CELEX entries for reference:
 
 # 15078\afschuwelijk\3321\Af-'sxy-w@-l@k\[Af][sxy:][w@][l@k]\[VC][CCVV][CV][CVC]
 # 131563\huwelijk\42572\'hy-w@-l@k\[hy:][w@][l@k]\[CVV][CV][CVC]

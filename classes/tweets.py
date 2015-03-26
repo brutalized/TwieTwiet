@@ -15,10 +15,12 @@ class Tweets:
 	''' Class to initialize the Tweets set to use for Rhyme making '''
 
 	def __init__(self, start = 0, stop = False):
+		''' Loads the Twitter data '''
+
 		self.twitterData = self.__getTwitterData(start, stop)
 
 	def __getTwitterData(self, start, stop):
-		''' Gets all the Twitter data from two hours ago (or is not available use fallback data) and make it a JSON set '''
+		''' Gets all the Twitter data from two hours ago (or uses fallback data if not available) and make it a JSON set '''
 
 		dt = datetime.datetime.now()
 		filename = '/net/corpora/twitter2/Tweets/{0}/{1:02d}/{0}{1:02d}{2:02d}:{3:02d}.out.gz'.format(dt.year, dt.month, dt.day, dt.hour-2)
@@ -84,6 +86,8 @@ class Tweets:
 		return self.tweets
 
 def tester():
+	''' Test function for testing the Tweets class on it's own '''
+
 	import os
 	os.chdir(os.path.dirname('../'))
 	print('Initializing database..')

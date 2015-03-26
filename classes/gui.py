@@ -177,16 +177,12 @@ class ProgressBar(QtGui.QProgressBar):
 	Progress bar with basic update method.
 	"""
 	def __init__(self):
-		"""
-		Initializes the progress bar and resizes it.
-		"""
+		""" Initializes the progress bar and resizes it """
 		super().__init__()
 		self.resize(300, 50)
 
 	def update(self, title, value):
-		"""
-		Updates the progress bar with the specified title and value (in percentages).
-		"""
+		""" Updates the progress bar with the specified title and value (in percentages) """
 		self.setWindowTitle(title)
 		self.setValue(value)
 

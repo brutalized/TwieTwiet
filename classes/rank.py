@@ -1,15 +1,24 @@
 import math
 from collections import namedtuple
 
-class Rank():
-
+class Rank:
+	"""
+	This class ranks every TwieTwiet based on the length of the TwieTwiet and the involvement and popularity of the authors.
+	"""
+	
 	def __init__(self, twieTwiets):
+		""" Ranks the TwieTwiets and loads them into a variable """
 		self.ranked = self.rankTweets(twieTwiets)
-		
+	
 	def getRankedTweets(self):
+		""" Getter method for the list of ranked TwieTwiets """
 		return self.ranked
 	
 	def rankTweets(self, twieTwiets):
+		"""
+		Returns a list of ranked TwieTwiets.
+		Every TwieTwiet is weighted by length, user involvement and user popularity and the standard deviation from all of those variables.
+		"""
 		rankedTwieTwiets = []
 		
 		# Calculate maximum and total scores and individual scores per tweet
@@ -27,13 +36,13 @@ class Rank():
 				maxInvolvement = usersInvolvement
 			if usersPopularity > maxPopularity:
 				maxPopularity = usersPopularity
-				
+			
 			totLength += rhymeLength
 			totInvolvement += usersInvolvement
 			totPopularity += usersPopularity
 			
 			rankedTwieTwiets.append((tweet, rhymingTweet, Stats(rhymeLength, usersInvolvement, usersPopularity)))
-
+		
 		# Calculate the average and start with deviation
 		twieTweetCount = len(rankedTwieTwiets)
 		gemLength = totLength / twieTweetCount
@@ -74,7 +83,7 @@ class Rank():
 				w2 = 1
 			else:
 				w2 = (maxRankInvolvement / score.involvement) / 100
-				
+			
 			# Factor 3: Popularity of the Tweet's author
 			if score.popularity > maxRankPopularity:
 				w3 = 100
