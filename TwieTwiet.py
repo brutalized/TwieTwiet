@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
 ''' TwieTwiet Application by Arend-Eric, Lesley and Micha '''
-import time
-import re
 import sys
 import twitter.api as api
 import twitter.oauth as oauth
@@ -10,6 +8,7 @@ from PyQt4 import QtGui
 from classes.tweets import Tweets
 from classes.rhyme import Entry, Rhyme
 from classes.gui import Gui, ProgressBar
+from classes.rank import Rank
 
 def main(argv):
 	"""
@@ -21,18 +20,19 @@ def main(argv):
 		progress.show() # gotcho reference bro!
 
 		progress.update('Initializing database...', 5)
-		db = Tweets(0, 25000) # init db, use max 25.000 tweets
+		db = Tweets() # init db
 
 		progress.update('Loading Twitter data...', 30)
 		tweets = db.getTweets() # get tweets
 
 		progress.update('Loading rhyme dictionary...', 40)
-		rhyme = Rhyme()
+		rhyme = Rhyme()	# init rhyme db
 
 		progress.update('Matching tweets...', 70)
 		usedTweets = set()
 		twieTwiets = []
 
+		# Find TwieTweets
 		for tweet in tweets:
 			for rhymingTweet in tweets:
 				try:
@@ -45,8 +45,9 @@ def main(argv):
 				except:
 					continue
 
+		# Show the GUI
 		progress.close()
-		gui = Gui(twieTwiets)
+		gui = Gui([(tweet1, tweet2) for tweet1, tweet2, score in rank.getRankedTweets()])
 		gui.show()
 		app.exec_()
 	elif len(argv) == 2 and argv[1] == '-tweet':
@@ -68,6 +69,7 @@ def main(argv):
 				usedTweets = set()
 				twieTwiets = []
 
+				# Find TwieTweets
 				for i, tweet in enumerate(tweets):
 					if tweet.message in usedTweets:
 						continue
@@ -82,6 +84,9 @@ def main(argv):
 								break
 						except:
 							continue
+
+				rank = Rank(twieTwiets) # Rank them
+				twieTwiets = [(tweet1, tweet2) for tweet1, tweet2, score in rank.getRankedTweets()]
 
 				# Post the first TwieTwiet to twitter that doesn't exceed the character limit
 				token = '3098953431-Z6nnIGjNBq1drfDFq0D1j0Wc1qzTpttoJvOML0E'

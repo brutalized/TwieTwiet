@@ -33,7 +33,9 @@ class Rhyme:
 			filename = 'dpw.cd'
 		
 		if not os.path.isfile(filename):
-			print('Error:\nCould not find Celex DPW. Please put dpw.cd in the root map, or use the program on the LWP', file=sys.stderr)
+			print('Could not find CELEX data. Please put the celex-file "dpw.cd" in the root map, ', file=sys.stderr, end='')
+			print('or use the program on the Linux Workplace of the University of Groningen.\n', file=sys.stderr)
+			input('Press <ENTER> to exit')
 			exit(-1)
 		
 		self.dictionary = {}

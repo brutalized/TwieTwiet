@@ -134,7 +134,12 @@ class Gui(QtGui.QMainWindow, formClass):
 		return pixmap
 
 	def updateUI(self):
-		""" Shows the next TwieTwiet in the UI """
+		""" Shows the next TwieTwiet """
+		if(len(self.twieTwiets) == 0):
+			self.tweet.setText(self.styleTweet("Sorry!"))
+			self.tweet2.setText(self.styleTweet("No TwieTweets found"))
+			return
+
 		self.currentIndex = (self.currentIndex + 1) % len(self.twieTwiets)
 		tweet, tweet2 = self.twieTwiets[self.currentIndex]
 
