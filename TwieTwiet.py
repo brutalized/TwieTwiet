@@ -4,6 +4,7 @@
 import sys
 import twitter.api as api
 import twitter.oauth as oauth
+import datetime
 from PyQt4 import QtGui
 from classes.tweets import Tweets
 from classes.rhyme import Entry, Rhyme
