@@ -1,18 +1,18 @@
 ## TwieTwiet - The Rhyming Tweet Finder and Tweet Bot
 
 TwieTwiet is a project made by students of the University of Groningen.
-The goal of the program is to find two tweets that rhyme on each other.
+The goal of the program is to find two tweets that rhyme with each other.
 This is being done by using Twitter's JSON feed of an hour, and with a filtered
 selection of them finding matching tweets.
-The matching is done by using the last word of two tweets and comparing them thru the CELEX Corpus.
-The result is showed in a GUI. 
+The matching is done by using the last word of two tweets and comparing them through the CELEX Corpus.
+The result is shown in a GUI. 
 
 ### Installation Requirements
 
 To run the program you'll need to have Python 3 and PyQt4 installed.
 
 For the program to work you need to get a copy of CELEX's `dpw.cd` for a chosen language.
-Futher more, you'll need enough tweets to match from the Twitter JSON stream, and put this in a compressed file named `demodata.gz`.
+Further more, you'll need enough tweets to match from the Twitter JSON stream, and put this in a compressed file named `demodata.gz`.
 Put both files in the root map, and you should be ready to go.
 
 ### Usage
