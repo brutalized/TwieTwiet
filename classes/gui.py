@@ -5,23 +5,30 @@ from images_rc import *
 
 
 # Load the UI
-form_class = uic.loadUiType("classes/TwieTwiet.ui")[0]
+formClass = uic.loadUiType("classes/TwieTwiet.ui")[0]
 
 class ClickableLabel(QtGui.QLabel):
+	"""
+	Label that executes a given function on mouse release.
+	"""
 	def __init__(self, clickFunction=None, *args):
+		""" Initializes the Label and saves the reference to the function that needs to be called when clicked """
 		super().__init__(*args)
 		self.clickFunction = clickFunction
 
 	def mouseReleaseEvent(self, event):
+		""" Executes the function that was supplied on creation """
 		if self.clickFunction:
 			self.clickFunction()
 
 
-class Gui(QtGui.QMainWindow, form_class):
-	"""  """
-	
+class Gui(QtGui.QMainWindow, formClass):
+	"""
+	Main GUI for displaying TwieTwiets.
+	"""
+
 	def __init__(self, twieTwiets, parent=None):
-		""" initializing widgets """
+		""" Initializes all widgets """
 		QtGui.QMainWindow.__init__(self, parent)
 		self.setStyle(QtGui.QStyleFactory.create('Cleanlooks')) # widget bugfix 
 		self.setupUi(self)
@@ -43,9 +50,9 @@ class Gui(QtGui.QMainWindow, form_class):
 		pixmap2 = self.getUserImage(url2)
 
 		#tweet1
-		self.profile_picture = QtGui.QTableWidgetItem()
-		self.profile_picture.setBackground(QtGui.QBrush(pixmap))
-		self.tweet = ClickableLabel(self.showDetails, self.styleTweet("Welcome to TwieTwiet Bot! Hit the generate button to generate a TwieTwiet!"))
+		self.profilePicture = QtGui.QTableWidgetItem()
+		self.profilePicture.setBackground(QtGui.QBrush(pixmap))
+		self.tweet = ClickableLabel(self.toggleDetails, self.styleTweet("Welcome to TwieTwiet Bot! Hit the generate button to generate a TwieTwiet!"))
 		self.tweet.setTextFormat(QtCore.Qt.RichText)
 		self.tweet.setFont(QtGui.QFont("arial", 14))
 		self.tweet.setAlignment(QtCore.Qt.AlignCenter)
@@ -57,9 +64,9 @@ class Gui(QtGui.QMainWindow, form_class):
 		self.time.setTextAlignment(QtCore.Qt.AlignCenter)
 
 		#tweet2
-		self.profile_picture2 = QtGui.QTableWidgetItem()
-		self.profile_picture2.setBackground(QtGui.QBrush(pixmap2))
-		self.tweet2 = ClickableLabel(self.showDetails, self.styleTweet("Click on a TwieTwiet for additional information!"))
+		self.profilePicture2 = QtGui.QTableWidgetItem()
+		self.profilePicture2.setBackground(QtGui.QBrush(pixmap2))
+		self.tweet2 = ClickableLabel(self.toggleDetails, self.styleTweet("Click on a TwieTwiet for additional information!"))
 		self.tweet2.setTextFormat(QtCore.Qt.RichText)
 		self.tweet2.setFont(QtGui.QFont("arial", 14))
 		self.tweet2.setAlignment(QtCore.Qt.AlignCenter)
@@ -80,25 +87,25 @@ class Gui(QtGui.QMainWindow, form_class):
 		self.tableWidget.hideColumn(0)
 		self.tableWidget.hideColumn(1)
 		self.tableWidget.hideColumn(3)
-		self.tableWidget.setItem(0,0,self.profile_picture)
+		self.tableWidget.setItem(0,0,self.profilePicture)
 		self.header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
 		self.tableWidget.setItem(0,1,self.name)
 		self.header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
 		self.tableWidget.setItem(0,3,self.time)
 		self.header.setResizeMode(3, QtGui.QHeaderView.ResizeToContents)
-		self.tableWidget.setItem(1,0,self.profile_picture2)
+		self.tableWidget.setItem(1,0,self.profilePicture2)
 		self.tableWidget.setItem(1,1,self.name2)
 		self.tableWidget.setItem(1,3,self.time2)
 
-		self.profile_picture.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-		self.profile_picture.setFlags(QtCore.Qt.NoItemFlags)
+		self.profilePicture.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+		self.profilePicture.setFlags(QtCore.Qt.NoItemFlags)
 		self.name.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 		self.name.setFlags(QtCore.Qt.NoItemFlags)
 		self.time.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 		self.time.setFlags(QtCore.Qt.NoItemFlags)
 
-		self.profile_picture2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-		self.profile_picture2.setFlags(QtCore.Qt.NoItemFlags)
+		self.profilePicture2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+		self.profilePicture2.setFlags(QtCore.Qt.NoItemFlags)
 		self.name2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 		self.name2.setFlags(QtCore.Qt.NoItemFlags)
 		self.time2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
@@ -107,8 +114,8 @@ class Gui(QtGui.QMainWindow, form_class):
 		self.pushButton.clicked.connect(self.updateUI)
 		self.toggle = True
 
-	def showDetails(self):
-		""" show extra tweet information """
+	def toggleDetails(self):
+		""" Shows or hides extra information about a tweet """
 		if self.toggle:
 			self.toggle = False
 			self.tableWidget.showColumn(0)
@@ -127,14 +134,14 @@ class Gui(QtGui.QMainWindow, form_class):
 		return pixmap
 
 	def updateUI(self):
-		""" Update tweet data """
+		""" Shows the next TwieTwiet in the UI """
 		self.currentIndex = (self.currentIndex + 1) % len(self.twieTwiets)
 		tweet, tweet2 = self.twieTwiets[self.currentIndex]
 
 		pixmap = self.getUserImage(tweet.userImage)
-		self.profile_picture.setBackground(QtGui.QBrush(pixmap))
+		self.profilePicture.setBackground(QtGui.QBrush(pixmap))
 		pixmap2 = self.getUserImage(tweet2.userImage)
-		self.profile_picture2.setBackground(QtGui.QBrush(pixmap2))
+		self.profilePicture2.setBackground(QtGui.QBrush(pixmap2))
 
 		self.name.setText(tweet.userName)
 		self.name2.setText(tweet2.userName)
@@ -146,6 +153,7 @@ class Gui(QtGui.QMainWindow, form_class):
 		self.time2.setText(tweet2.date)
 
 	def styleTweet(self, message):
+		""" Converts a string to a styled string """
 		words = message.split()	
 		for i in range(len(words)):
 			if words[i][0] == "#":
@@ -160,11 +168,20 @@ class Gui(QtGui.QMainWindow, form_class):
 
 
 class ProgressBar(QtGui.QProgressBar):
+	"""
+	Progress bar with basic update method.
+	"""
 	def __init__(self):
+		"""
+		Initializes the progress bar and resizes it.
+		"""
 		super().__init__()
 		self.resize(300, 50)
 
 	def update(self, title, value):
+		"""
+		Updates the progress bar with the specified title and value (in percentages).
+		"""
 		self.setWindowTitle(title)
 		self.setValue(value)
 

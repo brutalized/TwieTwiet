@@ -9,19 +9,23 @@ class Entry:
 	"""
 	This class represents an entry for a real life dictionary.
 	"""
-	pattern = re.compile('[^\[\]]+') # still need to make this proper with lookbehind [ and lookahead ]
+	pattern = re.compile('[^\[\]]+')
 	def __init__(self, orthography, stress, phonology, cvpattern):
 		"""
-		phonology and cvpattern are expected to have the following format: [syl1][syl2][syl3]
+		Determines which syllable is stressed and how the syllables are divided into pronunciation and CV pattern.
 		"""
 		self.orthography = orthography
 		self.stress = stress.count('-', 0, stress.index('\'')) # index of syllable that is stressed.
 		self.phonology = self.pattern.findall(phonology)
 		self.cvpattern = self.pattern.findall(cvpattern)
 
+
 class Rhyme:
+	"""
+	This class loads a dictionary from a file, converts it, and offers an interface to determine whether or not two words rhyme with each other by combining the stress, pronunciation and CV pattern from the loaded dictionary.
+	"""
 	def __init__(self):
-		
+		""" Load dictionary from file and initialize the rhyme dictionary """
 		filename = '/net/corpora/CELEX/dutch/dpw/dpw.cd'
 		
 		if not os.path.isfile(filename):
@@ -33,10 +37,6 @@ class Rhyme:
 			exit(-1)
 		
 		self.dictionary = {}
-		
-		# load dictionary
-		#entries = [line.rstrip().split('\\') for line in file]
-		#self.dictionary = {entry[1].lower(): Entry(entry[1], entry[3], entry[4], entry[5]) for entry in entries if entry[3] != ''}
 
 		for line in open(filename, encoding='utf-8'):
 			line = line.rstrip().split('\\')
@@ -45,12 +45,7 @@ class Rhyme:
 				self.dictionary[entry.orthography.lower()] = entry
 		
 	def compare(self, word1, word2):
-		"""
-		Checks if two words rhyme with each other.
-		1: word1 and word2 rhyme with each other.
-		0: word1 and word2 don't rhyme with each other.
-		-1: word1 or word2 was not found in the dictionary.
-		"""
+		""" Checks if two words rhyme with each other. """
 		if self.lookup(word1) and self.lookup(word2):
 			word1 = self.dictionary[word1]
 			word2 = self.dictionary[word2]
@@ -60,6 +55,7 @@ class Rhyme:
 			raise ValueError('word1 or word2 was not found in the dictionary.')
 	
 	def getRhyme(self, word):
+		""" Returns the part of the word that has to rhyme (as a list) """
 		phonemes = word.phonology[word.stress:]
 		cv = word.cvpattern[word.stress:]
 		consonants = cv[0].count('C', 0, cv[0].index('V')) # count consonants at the start of the first syllable until you find a V
@@ -67,10 +63,11 @@ class Rhyme:
 		return phonemes
 	
 	def lookup(self, word):
+		""" Checks whether or not the word was found in the rhyme dictionary """
 		return word in self.dictionary
 
 
-def test_rhyme():
+def testRhyme():
 	import os
 	os.chdir(os.path.dirname('../'))
 	print('Initializing rhyme dictionary...')
@@ -88,42 +85,8 @@ def test_rhyme():
 		else:
 			print('{} en {} rijmen niet!\n'.format(word1, word2))
 
-def test_full():
-	import os
-	import tweets
-	os.chdir(os.path.dirname('../'))
-	samplesize = 1000
-	print('Initializing tweets...')
-	tweets_handler = tweets.Tweets()
-	tweets = tweets_handler.getTweets(0, samplesize)
-	print('Initializing rhyme dictionary...')
-	rhyme = Rhyme()
-	print('Initialization complete.\n')
-	
-#	message1 = [word for word in tweets[0].message.lower().split() if rhyme.lookup(word)]
-#	message2 = [word for word in tweets[1].message.lower().split() if rhyme.lookup(word)]
-	
-	sweets = [tweet for tweet in tweets if rhyme.lookup(tweet.message.lower().split()[-1])]
-	
-	twietwiets = []
-	for i, sweet in enumerate(sweets):
-		message = sweet.message.lower().split()
-		for j, sweet2 in enumerate(sweets):
-			message2 = sweet2.message.lower().split()
-			if i != j and message[-1] != message2[-1] and rhyme.compare(message[-1], message2[-1]):
-				twietwiets.append((sweet, sweet2))
-				print('found two corresponding sweets! Sweets spotted at: position {} and {}'.format(i, j))
-	else:
-		print('No corresponding sweets found at samplesize', samplesize, 'and sweet size', len(sweets))
-	
-	for twietwiet in twietwiets:
-		tweet, tweet2 = twietwiet
-		print('Tweet 1:', tweet.message)
-		print('Tweet 2:', tweet2.message)
-		print()
-
 if __name__ == '__main__':
-	test_rhyme()
+	testRhyme()
 
 # 15078\afschuwelijk\3321\Af-'sxy-w@-l@k\[Af][sxy:][w@][l@k]\[VC][CCVV][CV][CVC]
 # 131563\huwelijk\42572\'hy-w@-l@k\[hy:][w@][l@k]\[CVV][CV][CVC]

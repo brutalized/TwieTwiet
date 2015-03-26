@@ -12,6 +12,9 @@ from classes.rhyme import Entry, Rhyme
 from classes.gui import Gui, ProgressBar
 
 def main(argv):
+	"""
+	The main function that ties all the different aspects of the application together.
+	"""
 	if len(argv) == 1:
 		app = QtGui.QApplication(argv)
 		progress = ProgressBar()
@@ -50,7 +53,7 @@ def main(argv):
 		lastUpdate = None
 		while True:
 			dt = datetime.datetime.now()
-			if dt.hour != lastUpdate.hour
+			if dt.hour != lastUpdate.hour:
 				lastUpdate = datetime.datetime.now()
 				print('Initializing database... (this may take a while)')
 				db = Tweets()
