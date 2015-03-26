@@ -17,7 +17,7 @@ def main(argv):
 	if len(argv) == 1:
 		app = QtGui.QApplication(argv)
 		progress = ProgressBar()
-		progress.show() # gotcho reference bro!
+		progress.show()
 
 		progress.update('Initializing database...', 5)
 		db = Tweets() # init db
@@ -45,6 +45,7 @@ def main(argv):
 				except:
 					continue
 
+		rank = Rank(twieTwiets) # Rank them
 		# Show the GUI
 		progress.close()
 		gui = Gui([(tweet1, tweet2) for tweet1, tweet2, score in rank.getRankedTweets()])
@@ -89,10 +90,10 @@ def main(argv):
 				twieTwiets = [(tweet1, tweet2) for tweet1, tweet2, score in rank.getRankedTweets()]
 
 				# Post the first TwieTwiet to twitter that doesn't exceed the character limit
-				token = '3098953431-Z6nnIGjNBq1drfDFq0D1j0Wc1qzTpttoJvOML0E'
-				token_key = 'uiPmdVyB73wzqr6cyDiZ4NzFQ9eDYmthm44Q4voaqzwFA'
-				con_secret = 'ByfuGTFGSp7FBAy0MuLAUOKxn'
-				con_secret_key = 'TC90HCgTFxg4Cu1J0jCCTr1SfCEkOKXnE4MSAriOrMeLcCbX8m'
+				token = 'xxx'
+				token_key = 'xxx'
+				con_secret = 'xxx'
+				con_secret_key = 'xxx'
 
 				auth = oauth.OAuth(token, token_key, con_secret, con_secret_key)
 				twitter = api.Twitter(auth=auth)
